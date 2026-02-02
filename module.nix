@@ -42,6 +42,7 @@ inputs: {
       ];
       lazy = true;
       data = with pkgs.vimPlugins; [
+        oklch-color-picker-nvim
         project-nvim
         vim-tmux-navigator
         blink-cmp
