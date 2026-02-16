@@ -33,7 +33,6 @@
       system: let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [inputs.my-packages.overlays.default];
         };
       in {
         default = wrapper.config.wrap {inherit pkgs;};

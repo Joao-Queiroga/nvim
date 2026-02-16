@@ -4,7 +4,9 @@ inputs: {
   lib,
   pkgs,
   ...
-}: {
+}: let
+  mypkgs = inputs.my-packages.packages.${pkgs.stdenv.hostPlatform.system};
+in {
   imports = [wlib.wrapperModules.neovim];
   options.nvim-lib.neovimPlugins = lib.mkOption {
     readOnly = true;
@@ -17,7 +19,7 @@ inputs: {
   config.settings.aliases = ["vim" "vi"];
 
   config.info = {
-    springJars = "${pkgs.spring-boot-tools}/share/vscode/extensions/extension/jars";
+    springJars = "${mypkgs.spring-boot-tools}/share/vscode/extensions/extension/jars";
   };
 
   config.specs = let
@@ -69,7 +71,7 @@ inputs: {
       data = with pkgs.vimPlugins; [
         nvim-lspconfig
         nvim-jdtls
-        spring-boot-nvim
+        mypkgs.vimPlugins.spring-boot-nvim
         rustaceanvim
         crates-nvim
         typescript-tools-nvim
@@ -78,7 +80,7 @@ inputs: {
         rust-analyzer
         gopls
         jdt-language-server
-        spring-boot-tools
+        mypkgs.spring-boot-tools
         clang-tools
         emmet-language-server
         typescript
