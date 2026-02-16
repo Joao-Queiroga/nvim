@@ -24,7 +24,6 @@ if vim.env.PROF then
   })
 end
 
-vim.cmd.colorscheme("tokyonight-night")
 require("config.settings")
 require("config.options")
 require("config.lsp")

@@ -18,27 +18,26 @@
     wrapper = wrappers.lib.evalModule module;
   in {
     overlays = {
-      default = final: prev: {neovim = wrapper.config.wrap {pkgs = final;};};
-      neovim = self.overlays.default;
+      neovim = final: prev: {neovim = wrapper.config.wrap {pkgs = final;};};
+      default = self.overlays.neovim;
     };
     wrapperModules = {
-      default = module;
-      neovim = self.wrapperModules.default;
+      neovim = module;
+      default = self.wrapperModules.neovim;
     };
     wrappers = {
-      default = wrapper.config;
-      neovim = self.wrappers.default;
+      neovim = wrapper.config;
+      default = self.wrappers.neovim;
     };
     packages = forAllSystems (
       system: let
-        pkgs = import nixpkgs {
-          inherit system;
-        };
+        pkgs = import nixpkgs {inherit system;};
       in {
-        default = wrapper.config.wrap {inherit pkgs;};
-        neovim = self.packages.${system}.default;
+        neovim = wrapper.config.wrap {inherit pkgs;};
+        default = self.packages.${system}.neovim;
       }
     );
+    # `wrappers.neovim.enable = true`
     nixosModules = {
       default = self.nixosModules.neovim;
       neovim = wrappers.lib.mkInstallModule {
@@ -51,13 +50,53 @@
     # But that is how you enable it.
     homeModules = {
       default = self.homeModules.neovim;
-      neovim = wrappers.lib.mkInstallModule {
-        name = "neovim";
-        value = module;
-        loc = [
-          "home"
-          "packages"
+      neovim = {
+        config,
+        pkgs,
+        lib,
+        ...
+      }: {
+        imports = [
+          (wrappers.lib.mkInstallModule
+            {
+              name = "neovim";
+              value = module;
+              loc = [
+                "home"
+                "packages"
+              ];
+            })
         ];
+        wrappers.neovim =
+          lib.mkIf
+          (config.stylix.enable or false && config.stylix.targets.neovim.enable or false) {
+            specs.colorscheme =
+              lib.mkForce
+              {
+                # install a plugin to handle the colors
+                data = pkgs.vimPlugins.mini-base16;
+                # run before the main init.lua
+                before = ["INIT_MAIN"];
+
+                # get the colors from your system and pass it
+                info =
+                  pkgs.lib.filterAttrs (
+                    k: v: builtins.match "base0[0-9A-F]" k != null
+                  )
+                  config.lib.stylix.colors.withHashtag;
+
+                config =
+                  /*
+                  lua
+                  */
+                  ''
+                    local info, pname, lazy = ...
+                    require("mini.base16").setup({
+                      palette = info,
+                    })
+                  '';
+              };
+          };
       };
     };
   };

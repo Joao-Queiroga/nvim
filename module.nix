@@ -1,4 +1,5 @@
-inputs: {
+inputs
+: {
   config,
   wlib,
   lib,
@@ -22,6 +23,21 @@ in {
     springJars = "${mypkgs.spring-boot-tools}/share/vscode/extensions/extension/jars";
   };
 
+  options.settings = {
+    colorscheme = {
+      name = lib.mkOption {
+        type = lib.types.str;
+        default = "tokyonight-night";
+        description = "colorscheme";
+      };
+      package = lib.mkOption {
+        type = lib.types.package;
+        default = pkgs.vimPlugins.tokyonight-nvim;
+        description = "package that contain the colorscheme";
+      };
+    };
+  };
+
   config.specs = let
     nolazy = plugin: {
       data = plugin;
@@ -34,8 +50,18 @@ in {
       snacks-nvim
       mini-nvim
       nvim-treesitter.withAllGrammars
-      tokyonight-nvim
     ];
+    colorscheme = {
+      data = config.settings.colorscheme.package;
+      before = ["INIT_MAIN"];
+      config =
+        /*
+        lua
+        */
+        ''
+          vim.cmd.colorscheme("${config.settings.colorscheme.name}")
+        '';
+    };
     general = {
       after = ["startup-plugins"];
       extraPackages = with pkgs; [
@@ -137,32 +163,6 @@ in {
         nixd
         nixfmt
       ];
-    };
-    base16 = {
-      # install a plugin to handle the colors
-      data = pkgs.vimPlugins.mini-base16;
-      # run before the main init.lua
-      before = ["INIT_MAIN"];
-
-      # get the colors from your system and pass it
-      info =
-        pkgs.lib.filterAttrs (
-          k: v: builtins.match "base0[0-9A-F]" k != null
-        )
-        config.lib.stylix.colors.withHashtag;
-
-      # call the plugin with the colors
-      enable = config.stylix.enable or false;
-      config =
-        /*
-        lua
-        */
-        ''
-          local info, pname, lazy = ...
-          require("mini.base16").setup({
-            palette = info,
-          })
-        '';
     };
   };
 
