@@ -4,6 +4,8 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     wrappers.url = "github:BirdeeHub/nix-wrapper-modules";
     wrappers.inputs.nixpkgs.follows = "nixpkgs";
+    mcp-hub.url = "github:ravitemer/mcp-hub";
+    mcp-hub.inputs.nixpkgs.follows = "nixpkgs";
     my-packages.url = "path:./pkgs";
     my-packages.inputs.nixpkgs.follows = "nixpkgs";
   };

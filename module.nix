@@ -43,11 +43,15 @@ in {
       data = plugin;
       lazy = false;
     };
+    lazy = plugin: {
+      data = plugin;
+      lazy = true;
+    };
   in {
     startup-plugins = with pkgs.vimPlugins; [
       lze
       lzextras
-      snacks-nvim
+      (lazy snacks-nvim)
       mini-nvim
       nvim-treesitter.withAllGrammars
     ];
@@ -162,6 +166,19 @@ in {
       extraPackages = with pkgs; [
         nixd
         nixfmt
+      ];
+    };
+    ai = {
+      lazy = true;
+      data = with pkgs.vimPlugins; [
+        codecompanion-nvim
+        codecompanion-spinner-nvim
+        codecompanion-history-nvim
+        copilot-lua
+        mcphub-nvim
+      ];
+      extraPackages = [
+        inputs.mcp-hub.packages.${pkgs.stdenv.hostPlatform.system}.default
       ];
     };
   };

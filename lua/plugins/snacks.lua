@@ -182,6 +182,13 @@ return {
       desc = "Git Status",
     },
     {
+      "<leader>gg",
+      function()
+        Snacks.lazygit()
+      end,
+      desc = "Lazygit",
+    },
+    {
       "<leader>gd",
       function()
         Snacks.picker.git_diff()

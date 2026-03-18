@@ -1,5 +1,6 @@
 vim.loader.enable()
 do
+  local ok
   ok, _G.nixInfo = pcall(require, vim.g.nix_info_plugin_name)
   if not ok then
     package.loaded[vim.g.nix_info_plugin_name] = setmetatable({}, {
@@ -30,3 +31,4 @@ require("config.lsp")
 require("config.keybindings")
 require("config.autocmd")
 require("plugins")
+vim.lsp.enable({ "lua_ls", "nil_ls", "nixd", "gopls", "emmet_language_server", "cssls", "jsonls", "yamlls", "qmlls" })

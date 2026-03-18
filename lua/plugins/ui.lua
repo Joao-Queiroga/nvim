@@ -50,7 +50,9 @@ return {
     "markview.nvim",
     ft = "markdown",
     after = function()
-      require("markview").setup()
+      require("markview").setup({
+        preview = { filetypes = { "markdown", "codecompanion" } },
+      })
     end,
   },
 }
