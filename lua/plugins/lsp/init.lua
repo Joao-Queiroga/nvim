@@ -1,14 +1,6 @@
 ---@type PluginList
 return {
   {
-    "nvim-lspconfig",
-    lazy = true,
-    beforeAll = function()
-      local lspConfigPath = nixInfo.get_nix_plugin_path("nvim-lspconfig")
-      vim.opt.runtimepath:prepend(lspConfigPath)
-    end,
-  },
-  {
     "mini.cursorword",
     event = "DeferredUIEnter",
     after = function()

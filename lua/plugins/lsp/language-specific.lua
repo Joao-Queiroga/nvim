@@ -27,18 +27,7 @@ return {
     before = function()
       vim.g.rustaceanvim = {
         server = {
-          default_settings = {
-            ["rust-analyzer"] = {
-              cargo = {
-                allFeatures = true,
-                loadOutDirsFromCheck = true,
-                buildScripts = {
-                  enable = true,
-                },
-              },
-              checkOnSave = true,
-            },
-          },
+          default_settings = {},
         },
       }
     end,
