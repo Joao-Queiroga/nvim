@@ -38,20 +38,10 @@ in {
     };
   };
 
-  config.specs = let
-    nolazy = plugin: {
-      data = plugin;
-      lazy = false;
-    };
-    lazy = plugin: {
-      data = plugin;
-      lazy = true;
-    };
-  in {
+  config.specs = {
     startup-plugins = with pkgs.vimPlugins; [
       lze
       lzextras
-      (lazy snacks-nvim)
       mini-nvim
       nvim-treesitter.withAllGrammars
       nvim-lspconfig
@@ -75,6 +65,7 @@ in {
       ];
       lazy = true;
       data = with pkgs.vimPlugins; [
+        snacks-nvim
         oklch-color-picker-nvim
         project-nvim
         vim-tmux-navigator
