@@ -34,7 +34,7 @@ local tabline_file_flags = {
 
 local file_icon = {
   init = function(self)
-    self.icon, self.icon_hl, _ = MiniIcons.get("file", self.filename)
+    self.icon, self.icon_hl, _ = MiniIcons.get("file", vim.api.nvim_buf_get_name(self.bufnr))
   end,
   provider = function(self)
     return self.icon .. " "
@@ -72,7 +72,6 @@ local function display_name(bufnr)
   local path = vim.api.nvim_buf_get_name(bufnr)
   local filename = vim.fn.fnamemodify(path, ":t")
 
-  -- conta quantos buffers têm o mesmo nome
   local count = 0
   for _, b in ipairs(buflist_cache) do
     if vim.fn.fnamemodify(vim.api.nvim_buf_get_name(b), ":t") == filename then
@@ -84,9 +83,7 @@ local function display_name(bufnr)
   if count == 1 then
     result = stringdelimiter(filename, 18) -- único, só o nome
   else
-    -- relativo ao cwd
     local rel = vim.fn.fnamemodify(path, ":.:")
-    -- pega só o último diretório + arquivo
     local parts = vim.split(rel, "/", { plain = true })
     if #parts >= 2 then
       result = stringdelimiter(parts[#parts - 1], 15) .. "/" .. stringdelimiter(parts[#parts], 18)
