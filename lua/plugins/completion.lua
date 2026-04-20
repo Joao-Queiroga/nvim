@@ -2,7 +2,7 @@
 return {
   {
     "blink.cmp",
-    lazy = false,
+    event = { "InsertEnter", "CmdlineEnter" },
     after = function()
       require("blink.cmp").setup({
         sources = {
