@@ -11,7 +11,11 @@ return {
     "project.nvim",
     event = "DeferredUIEnter",
     after = function()
-      require("project").setup({})
+      require("project").setup({
+        snacks = {
+          enabled = true,
+        },
+      })
     end,
   },
   {
