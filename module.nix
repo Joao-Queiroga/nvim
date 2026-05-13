@@ -111,6 +111,7 @@ in {
         nil
         nixd
         kdePackages.qtdeclarative
+        tailwindcss-language-server
       ];
     };
     format = {
